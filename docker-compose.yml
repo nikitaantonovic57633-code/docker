@@ -1,0 +1,23 @@
+services:
+  frontend:
+    build: .
+    image: naravkin/my-frontend:latest
+    ports:
+      - "8080:80"
+    depends_on:
+      api:
+        condition: service_started
+
+  api:
+    image: containous/whoami:latest
+
+  logger:
+    image: busybox:latest
+    command: >
+      sh -c "while true; do echo \"$(date '+%Y-%m-%d %H:%M:%S') - log entry\" >> /data/log.txt; sleep 5; done"
+    volumes:
+      - logger_data:/data
+
+volumes:
+  logger_data:
+    name: logger_data
